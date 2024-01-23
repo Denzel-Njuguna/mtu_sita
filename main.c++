@@ -8,5 +8,6 @@ int main(){
     int bank;
     cout<<"Bank management!";
     cout<<"This works";
+    cout<<"This is amazing";
     return 0;
 }
