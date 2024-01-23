@@ -7,5 +7,6 @@ using namespace std;
 int main(){
     int bank;
     cout<<"Bank management!";
+    cout<<"This works";
     return 0;
 }
