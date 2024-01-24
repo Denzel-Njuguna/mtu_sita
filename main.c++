@@ -6,8 +6,9 @@ using namespace std;
 
 int main(){
     int bank;
-    cout<<"Bank management!";
-    cout<<"This works";
-    cout<<"This is amazing";
+    cout<<"Bank management!"<<endl;
+    cout<<"This works"<<endl;
+    cout<<"This is amazing"<<endl;
+    cout<<"mark"<<endl;
     return 0;
 }
