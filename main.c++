@@ -37,6 +37,14 @@ string loanStatus;
 int interestRate;
 
 class Admin {
+    public:
+        void login(){
+
+        }
+
+        void signup(){
+            
+        }
 
 };
 
