@@ -49,7 +49,7 @@ struct Credentials {
 };
 
 /*
-Hi guys I've created this backbone based on what i rember that we were to implement, i might have excluded other features but will just add on this foundation
+Hi guys I've created this backbone based on what I remember we were supposed to implement, I might have excluded other features but will just add on this foundation
 Don't get scared of the code everything is just simple.
 WHAT I HAVE ADDED
     -adminsCredentials.txt file - this will be storing admins passwords and username in this format "adminusername,adminpassword"
@@ -61,8 +61,8 @@ N/B:/-
     this can be adressed by storing the files in separate folders
 
 This code only serves as a foundation code and we should be building on top of it,
-We can start by working on the functions on the admin accout side/ then add something that i might have forgoten to add on the menu (add function of admin to add other admins and employees,freeze acouts etc)
-We can also improve the user interface, i had limited time so i could not enhance it
+We can start by working on the functions on the admin account side/ then add something that I(Nerd) might have forgoten to add on the menu (add function of admin to add other admins and employees,freeze accounts etc)
+We can also improve the user interface, I had limited time so I could not enhance it
 */
 void signup() {
     Credentials newUser;
