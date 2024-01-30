@@ -272,36 +272,50 @@ private:
 class Customer : public Account {
 public:
     void displayMenu() override {
-        cout << "\t\t\t------------- USER MENU ---------------\n";
+        //Brad
+        cout << "\t\t\t------------- CUSTOMER MENU ---------------\n";
         cout << "\t\t\t1. Check balance\n";
-        cout << "\t\t\t2. Deposit money\n";
-        cout << "\t\t\t3. Withdraw money\n";
-        cout << "\t\t\t4. Transfer money\n";
-        cout << "\t\t\t5. Change password\n";
-        cout << "\t\t\t6. Log out\n";
+        cout << "\t\t\t2. Create a bank account\n";
+        cout << "\t\t\t3. Delete account\n";
+        cout << "\t\t\t4. Deposit money\n";
+        cout << "\t\t\t5. Withdraw money\n";
+        cout << "\t\t\t6. Transfer money\n";
+        cout << "\t\t\t7. Change password\n";
+        cout << "\t\t\t8. Change currency\n";
+        //Sam
+        cout << "\t\t\t9. Log out\n";
         cout << "\t\t\tPlease enter an option: ";
     }
 
     void executeAction(int actionNumber) override {
         switch (actionNumber) {
             case 1:
+            //Brad
                 checkBalance();
                 break;
             case 2:
-                depositMoney();
+            //Crissy
+                createCustomerBankAccount();
                 break;
             case 3:
-                withdrawMoney();
+            //Crissy
+                deleteCustomerBankAccount();
                 break;
             case 4:
-                transferMoney();
+            //lazy Denzel
+                depositMoney();
                 break;
+            //lazy Denzel
             case 5:
-                changePassword();
+                withdrawMoney();
                 break;
             case 6:
-                logOutLogic();
+            //Samson
+                transferMoney();
                 break;
+            case 7:
+            //Kelvin
+                changePassword();
             default:
                 cout << "\t\tInvalid option!\n";
                 break;
@@ -337,6 +351,10 @@ private:
         // add the loging out logic here
         cout << "\t\tLogin out...\n";
     }
+};
+//Mark
+double changeCurrency() {
+
 };
 
 int main() {
