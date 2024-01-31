@@ -332,17 +332,33 @@ private:
 };
 //Mark
 double changeCurrency() {
-
+    return 0;// till its worked on let it return 0 to avoid  warning: no return statement in function returning non-void [-Wreturn-type]
 };
+
+Account* currentAccount;
+// void logOut() {
+//     Credentials inputCredentials;
+//     currentAccount = nullptr;
+    
+//     inputCredentials.userName.clear();
+//     inputCredentials.passWord.clear();
+//     cout << "\tYou have successfully logged out." << endl;
+//     main();
+// }
+void logOut() {
+    currentAccount = nullptr;
+    cout << "\tLogged out successfully.\n";
+    main();//going back to the main menu
+}
 
 int main() {
     int choice;
     bool validCredentials = false;
     Credentials inputCredentials;
-    Account* currentAccount;
+    Account *currentAccount = nullptr; 
 
     do {
-        system("cls");
+        //system("cls");
         cout <<"~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n";
         cout <<"|                      MTU SITA BANK SYSTEM                  |\n";
         cout <<"|~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~|\n";
@@ -356,6 +372,12 @@ int main() {
         switch (choice) {
             case 1:
                 signup();
+                break;
+            case 3://added this code to handle exit when loged in
+                cout <<"|~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~|\n";
+                cout <<"|           Thank You For Using Mtu Sita Bank System         |\n";
+                cout <<"|~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~|\n";
+                exit(0);
                 break;
             case 2:
                 system("cls");
