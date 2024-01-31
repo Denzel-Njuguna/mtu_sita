@@ -332,7 +332,7 @@ private:
 };
 //Mark
 double changeCurrency() {
-
+    return 0;
 };
 
 int main() {
