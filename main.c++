@@ -42,6 +42,9 @@ int actionNumber;
 int choice;
 bool validCredentials = false;
 
+void logOut();
+int main();
+
 
 struct Credentials {
     string userName;
@@ -160,7 +163,7 @@ public:
                 transferFundsBetweenAccounts();
                 break;
             case 6:
-                logOutLogic();
+                logOut();
                 break;
             default:
                 cout << "\t\tInvalid option!\n";
@@ -192,10 +195,6 @@ private:
     void transferFundsBetweenAccounts() {
         // Implement logic for transferring funds between two accounts
         cout << "\t\tTransferring funds...\n";
-    }
-    void logOutLogic() {
-        // add the loging out logic here
-        cout << "\t\tLogin out...\n";
     }
 };
 
@@ -230,7 +229,7 @@ public:
                 offerLoan();
                 break;
             case 6:
-                logOutLogic();
+                logOut();
                 break;
             default:
                 cout << "\t\tInvalid option!\n";
@@ -262,10 +261,6 @@ private:
     void offerLoan() {
         // Implement logic for changing password
         cout << "\t\tChanging password...\n";
-    }
-    void logOutLogic() {
-        // add the loging out logic here
-        cout << "\t\tLogin out...\n";
     }
 };
 
@@ -316,6 +311,9 @@ public:
             case 7:
             //Kelvin
                 changePassword();
+            case 9:
+                logOut();
+                break;
             default:
                 cout << "\t\tInvalid option!\n";
                 break;
@@ -347,16 +345,35 @@ private:
         // Implement logic for changing password
         cout << "\t\tChanging password...\n";
     }
-    void logOutLogic() {
-        // add the loging out logic here
-        cout << "\t\tLogin out...\n";
+    void createCustomerBankAccount(){
+
+    }
+
+    void deleteCustomerBankAccount(){
+
     }
 };
 //Mark
-double changeCurrency() {
+double changeCurrency(){
+    return 0;
+}
 
-};
-
+Account* currentAccount;
+void logOut() {
+    // Reset the currentAccount pointer to null
+    Credentials logOutUser;
+    currentAccount = nullptr;
+    
+    // Clear any sensitive data stored in the inputCredentials object
+    logOutUser.userName.clear();
+    logOutUser.passWord.clear();
+    system("cls");
+    cout <<"\t\t\t============ MTU SITA BANK SYSTEM ==============\n";
+    cout <<"\t\t\t************************************************\n";
+    cout <<"\t\t\t---------------- LOGINING OUT ------------------\n\n\n";
+    cout << "\t\t\tYou have successfully logged out." << endl;
+    main();
+}
 int main() {
     int choice;
     bool validCredentials = false;
