@@ -42,6 +42,7 @@ int interestRate;
 int actionNumber;
 int choice;
 bool validCredentials = false;
+string newCustomer;
 
 void logOut();
 int main();
@@ -351,9 +352,6 @@ private:
     void changePassword() {
         // Implement logic for changing password
         cout << "\t\tChanging password...\n";
-    }
-    void createCustomerBankAccount(){
-
     }
 
     void deleteCustomerBankAccount(){
