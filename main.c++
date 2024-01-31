@@ -45,7 +45,7 @@ int interestRate;
 int actionNumber;
 int choice;
 bool validCredentials = false;
-string newCustomer;
+
 
 void logOut();
 int main();
@@ -54,7 +54,6 @@ int main();
 struct Credentials {
     string userName;
     string passWord;
-    string userName;
     int age;
     int initialDeposit;
     int accountNumber;
@@ -368,8 +367,14 @@ private:
 };
 //Mark
 double changeCurrency() {
-
+    return 0;
 };
+Account *currentAccount;
+void logOut() {
+    currentAccount = nullptr;
+    cout << "\tYou have successfully logged out." << endl;
+    main();
+}
 
 int main() {
     int choice;
