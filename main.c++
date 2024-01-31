@@ -43,6 +43,9 @@ int actionNumber;
 int choice;
 bool validCredentials = false;
 
+void logOut();
+int main();
+
 
 struct Credentials {
     string userName;
@@ -68,13 +71,17 @@ We can also improve the user interface, I had limited time so I could not enhanc
 void signup() {
     Credentials newUser;
     system("cls");
-    cout <<"\t\t\t============ MTU SITA BANK SYSTEM ==============\n";
-    cout <<"\t\t\t************************************************\n";
-    cout <<"\t\t\t------------------SIGN UP-----------------------\n";
-    cout << "\t\t\t\tEnter a username: ";
+    cout <<"~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n";
+    cout <<"|                   MTU SITA BANK SYSTEM                     |\n";
+    cout <<"|~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~|\n";
+    cout <<"|   SIGN UP                                                  |\n";
+    cout <<"|~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~|\n";
+    cout <<"|   Enter a username: ";
     cin >> newUser.userName;
-    cout << "\t\t\t\tEnter a password: ";
+    cout <<"|~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~|\n";
+    cout <<"|   Enter a password: ";
     cin >> newUser.passWord;
+    cout <<"|~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~|\n";
 
     ofstream credentialsFile("customerCredentials.txt", ios::app);
     if (credentialsFile.is_open()) {
@@ -86,42 +93,7 @@ void signup() {
     }
 }
 
-bool login() {
-    Credentials loginUser;
-    system("cls");
-    cout <<"\t\t\t============ MTU SITA BANK SYSTEM ==============\n";
-    cout <<"\t\t\t************************************************\n";
-    cout <<"\t\t\t-------------------LOGIN------------------------\n";
-    cout << "\t\t\t\tEnter your username: ";
-    cin >> loginUser.userName;
-    cout << "\t\t\t\tEnter your password: ";
-    cin >> loginUser.passWord;
 
-    ifstream credentialsFile("customerCredentials.txt");
-    if (credentialsFile.is_open()) {
-        string line;
-        while (getline(credentialsFile, line)) {
-            // The line should be in the format "username,password"
-            // so we can use the comma as a delimiter to extract the
-            // username and password
-            size_t commaPos = line.find(',');
-            string username = line.substr(0, commaPos);
-            string password = line.substr(commaPos + 1);
-
-            if (loginUser.userName == username && loginUser.passWord == password) {
-                // If we found a match, return true
-                credentialsFile.close();
-                return true;
-            }
-        }
-        // If we didn't find a match, return false
-        credentialsFile.close();
-        return false;
-    } else {
-        cout << "\t\t\t\t\tError: could not open credentials file" << endl;
-        return false;
-    }
-}
 
 
 class Account {
@@ -133,14 +105,18 @@ public:
 class Admin : public Account {
 public:
     void displayMenu() override {
-        cout << "\t\t\t------------ ADMIN MENU --------------\n";
-        cout << "\t\t\t1. View all users\n";
-        cout << "\t\t\t2. Delete a user\n";
-        cout << "\t\t\t3. Add funds to account\n";
-        cout << "\t\t\t4. Withdraw funds from account\n";
-        cout << "\t\t\t5. Transfer funds between accounts\n";
-        cout << "\t\t\t6. Log out\n";
-        cout << "\t\t\tPlease enter an option: ";
+        cout <<"|~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~|\n";
+        cout <<"|                        ADMIN MENU                          |\n";
+        cout <<"|~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~|\n";
+        cout <<"|   1. View all users                                        |\n";
+        cout <<"|   2. Delete a user                                         |\n";
+        cout <<"|   3. Add funds to account                                  |\n";
+        cout <<"|   4. Withdraw funds from account                           |\n";
+        cout <<"|   5. Transfer funds between accounts                       |\n";
+        cout <<"|   6. Log out                                               |\n";
+        cout <<"|~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~|\n";
+        cout <<"|   Please enter an option: ";
+        cout <<"|~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~|\n";
     }
 
     void executeAction(int actionNumber) override {
@@ -161,7 +137,7 @@ public:
                 transferFundsBetweenAccounts();
                 break;
             case 6:
-                logOutLogic();
+                logOut();
                 break;
             default:
                 cout << "\t\tInvalid option!\n";
@@ -194,23 +170,23 @@ private:
         // Implement logic for transferring funds between two accounts
         cout << "\t\tTransferring funds...\n";
     }
-    void logOutLogic() {
-        // add the loging out logic here
-        cout << "\t\tLogin out...\n";
-    }
 };
 
 class Employee : public Account {
 public:
     void displayMenu() override {
-        cout << "\t\t\t------------- EMPLOYEE MENU ---------------\n";
-        cout << "\t\t\t1. Change Account\n";
-        cout << "\t\t\t2. Manage transaction\n";
-        cout << "\t\t\t3. Deposit\n";
-        cout << "\t\t\t4. Withdrow\n";
-        cout << "\t\t\t5. Offer Loan\n";
-        cout << "\t\t\t6. Log out\n";
-        cout << "\t\t\tPlease enter an option: ";
+        cout <<"|~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~|\n";
+        cout <<"|                       EMPLOYEE MENU                        |\n";
+        cout <<"|~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~|\n";
+        cout <<"|   1. Change Account                                        |\n";
+        cout <<"|   2. Manage transaction                                    |\n";
+        cout <<"|   3. Deposit                                               |\n";
+        cout <<"|   4. Withdrow                                              |\n";
+        cout <<"|   5. Offer Loan                                            |\n";
+        cout <<"|   6. Log out                                               |\n";
+        cout <<"|~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~|\n";
+        cout <<"|   Please enter an option: \n";
+        cout <<"|~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~|\n";
     }
 
     void executeAction(int actionNumber) override {
@@ -231,7 +207,7 @@ public:
                 offerLoan();
                 break;
             case 6:
-                logOutLogic();
+                logOut();
                 break;
             default:
                 cout << "\t\tInvalid option!\n";
@@ -264,55 +240,54 @@ private:
         // Implement logic for changing password
         cout << "\t\tChanging password...\n";
     }
-    void logOutLogic() {
-        // add the loging out logic here
-        cout << "\t\tLogin out...\n";
-    }
 };
 
 class Customer : public Account {
 public:
     void displayMenu() override {
         //Brad
-        cout << "\t\t\t------------- CUSTOMER MENU ---------------\n";
-        cout << "\t\t\t1. Check balance\n";
-        cout << "\t\t\t2. Create a bank account\n";
-        cout << "\t\t\t3. Delete account\n";
-        cout << "\t\t\t4. Deposit money\n";
-        cout << "\t\t\t5. Withdraw money\n";
-        cout << "\t\t\t6. Transfer money\n";
-        cout << "\t\t\t7. Change password\n";
-        cout << "\t\t\t8. Change currency\n";
+        cout <<"|~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~|\n";
+        cout <<"|                       CUSTOMER MENU                        |\n";
+        cout <<"|~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~|\n";
+        cout <<"|   1. Check balance                                         |\n";
+        cout <<"|   2. Create a bank account                                 |\n";
+        cout <<"|   3. Delete account                                        |\n";
+        cout <<"|   4. Deposit money                                         |\n";
+        cout <<"|   5. Withdraw money                                        |\n";
+        cout <<"|   6. Transfer money                                        |\n";
+        cout <<"|   7. Change password                                       |\n";
+        cout <<"|   8. Change currency                                       |\n";
         //Sam
-        cout << "\t\t\t9. Log out\n";
-        cout << "\t\t\tPlease enter an option: ";
+        cout <<"|   9. Log out                                               |\n";
+        cout <<"|~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~|\n";
+        cout <<"|   Please enter an option: ";
     }
 
     void executeAction(int actionNumber) override {
         switch (actionNumber) {
             case 1:
             //Brad
-                checkBalance();
+                int checkBalance();
                 break;
             case 2:
             //Crissy
-                createCustomerBankAccount();
+                int createCustomerBankAccount();
                 break;
             case 3:
             //Crissy
-                deleteCustomerBankAccount();
+                int deleteCustomerBankAccount();
                 break;
             case 4:
             //lazy Denzel
-                depositMoney();
+                int depositMoney();
                 break;
             //lazy Denzel
             case 5:
-                withdrawMoney();
+                int withdrawMoney();
                 break;
             case 6:
             //Samson
-                transferMoney();
+                int transferMoney();
                 break;
             case 7:
             //Kelvin
@@ -377,9 +352,12 @@ private:
         // Implement logic for changing password
         cout << "\t\tChanging password...\n";
     }
-    void logOutLogic() {
-        // add the loging out logic here
-        cout << "\t\tLogin out...\n";
+    void createCustomerBankAccount(){
+
+    }
+
+    void deleteCustomerBankAccount(){
+
     }
 };
 //Mark
@@ -395,29 +373,33 @@ int main() {
 
     do {
         system("cls");
-        cout <<"\t\t\t============ MTU SITA BANK SYSTEM ==============\n";
-        cout <<"\t\t\t************************************************\n";
-        cout <<"\t\t\t----------------LOGIN / SIGNUP------------------\n";
-        cout <<"\t\t\t\t1. Sign Up\n";
-        cout <<"\t\t\t\t2. Log In\n";
-        cout <<"\t\t\t\t3. Exit\n";
-        // add more option here
-        cout <<"\t\t\tChose one of the options: ";
+        cout <<"~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n";
+        cout <<"|                      MTU SITA BANK SYSTEM                  |\n";
+        cout <<"|~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~|\n";
+        cout <<"|   1. Sign Up                                               |\n";
+        cout <<"|   2. Log In                                                |\n";
+        cout <<"|   3. Exit                                                  |\n";
+        cout <<"|~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~|\n";
+        cout <<"|   Select an option: ";
         cin >> choice;
-
+        cout <<"|~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~|\n";
         switch (choice) {
             case 1:
                 signup();
                 break;
             case 2:
                 system("cls");
-                cout <<"\t\t\t============ MTU SITA BANK SYSTEM ==============\n";
-                cout <<"\t\t\t************************************************\n";
-                cout <<"\t\t\t-------------------LOGIN------------------------\n";
-                cout << "\t\t\t\tEnter your username: ";
+                cout <<"|~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~|\n";
+                cout <<"|                      MTU SITA BANK SYSTEM                  |\n";
+                cout <<"|~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~|\n";
+                cout <<"|   LOGIN                                                    |\n";
+                cout <<"|~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~|\n";
+                cout <<"|   Enter your username: ";
                 cin >> inputCredentials.userName;
-                cout << "\t\t\t\tEnter your password: ";
+                cout <<"|~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~|\n";
+                cout <<"|   Enter your password: ";
                 cin >> inputCredentials.passWord;
+                cout <<"|~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~|\n";
 
                 ifstream credentialsFile("customerCredentials.txt");
                 if (credentialsFile.is_open()) {
@@ -499,9 +481,10 @@ int main() {
 
     } while (choice != 3);//make sure you change this when adding cases in the main menu
 
-    cout << "\t----------------------------------------------------------------------------------------------------------\n";
-    cout << "\t\t\t\t\tThank You For Using This System\t\t\t\t\t\t\n";
-    cout << "\t----------------------------------------------------------------------------------------------------------\n";
+    cout <<"|~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~|\n";
+    cout <<"|           Thank You For Using Mtu Sita Bank System         |\n";
+    cout <<"|~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~|\n";
+
 
     return 0;
 }
