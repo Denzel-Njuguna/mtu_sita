@@ -1,3 +1,4 @@
+
 #include <iostream>
 #include <cstdlib>
 #include <string>
@@ -41,6 +42,7 @@ int interestRate;
 int actionNumber;
 int choice;
 bool validCredentials = false;
+string newCustomer;
 
 void logOut();
 int main();
@@ -302,6 +304,35 @@ private:
         // Display current balance
         cout << "\t\tCurrent balance:\n";
     }
+    void createCustomerBankAccount(){
+      system("cls"); 
+        cout <<"\t\t\t============ MTU SITA BANK SYSTEM ==============\n";
+        cout <<"\t\t\t************************************************\n";
+        cout <<"\t\t\t------------ CREATE BANK ACCOUNT --------------\n";
+
+        cout << "\t\t\tEnter your full name: ";
+        getline(cin.ignore(), newCustomer.name);
+
+        cout << "\t\t\tEnter your age: ";
+        cin >> newCustomer.age;
+
+        cout << "\t\t\tEnter initial deposit amount: $";
+        cin >> newCustomer.initialDeposit;
+         static int accountCounter = 1001;
+        newCustomer.accountNumber = accountCounter++;
+
+        // Store the customer information in a file
+        ofstream customerFile("customerAccounts.txt", ios::app);
+        if (customerFile.is_open()) {
+            customerFile << newCustomer.accountNumber << "," << newCustomer.name << "," << newCustomer.age << ","
+                          << newCustomer.initialDeposit << endl;
+            customerFile.close();
+            cout << "\t\t\tBank account created successfully!\n";
+            cout << "\t\t\tYour account number is: " << newCustomer.accountNumber << endl;
+        } else {
+            cout << "\t\t\tError: could not open customer accounts file\n";
+        }
+    }
 
     void depositMoney() {
         // Implement logic for depositing money into account
@@ -322,9 +353,6 @@ private:
         // Implement logic for changing password
         cout << "\t\tChanging password...\n";
     }
-    void createCustomerBankAccount(){
-
-    }
 
     void deleteCustomerBankAccount(){
 
@@ -332,24 +360,8 @@ private:
 };
 //Mark
 double changeCurrency() {
-    return 0;// till its worked on let it return 0 to avoid  warning: no return statement in function returning non-void [-Wreturn-type]
-};
 
-Account* currentAccount;
-// void logOut() {
-//     Credentials inputCredentials;
-//     currentAccount = nullptr;
-    
-//     inputCredentials.userName.clear();
-//     inputCredentials.passWord.clear();
-//     cout << "\tYou have successfully logged out." << endl;
-//     main();
-// }
-void logOut() {
-    currentAccount = nullptr;
-    cout << "\tLogged out successfully.\n";
-    main();//going back to the main menu
-}
+};
 
 int main() {
     int choice;
