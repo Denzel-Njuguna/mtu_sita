@@ -15,6 +15,9 @@ string adminPassword;
 string employeeUsername;
 string employeePassword;
 int employeeAge;
+string newCustomer;
+int age;
+int accountNumber;
 string customerUsername;
 string customerPassword;
 int customerAge;
@@ -51,6 +54,10 @@ int main();
 struct Credentials {
     string userName;
     string passWord;
+    string userName;
+    int age;
+    int initialDeposit;
+    int accountNumber;
 };
 
 /*
@@ -305,26 +312,27 @@ private:
         cout << "\t\tCurrent balance:\n";
     }
     void createCustomerBankAccount(){
+        Credentials newCustomer;
       system("cls"); 
         cout <<"\t\t\t============ MTU SITA BANK SYSTEM ==============\n";
         cout <<"\t\t\t************************************************\n";
         cout <<"\t\t\t------------ CREATE BANK ACCOUNT --------------\n";
 
         cout << "\t\t\tEnter your full name: ";
-        getline(cin.ignore(), newCustomer.name);
+        getline(cin.ignore(), newCustomer.userName);
 
         cout << "\t\t\tEnter your age: ";
         cin >> newCustomer.age;
 
         cout << "\t\t\tEnter initial deposit amount: $";
         cin >> newCustomer.initialDeposit;
-         static int accountCounter = 1001;
+        static int accountCounter = 1001;
         newCustomer.accountNumber = accountCounter++;
 
         // Store the customer information in a file
         ofstream customerFile("customerAccounts.txt", ios::app);
         if (customerFile.is_open()) {
-            customerFile << newCustomer.accountNumber << "," << newCustomer.name << "," << newCustomer.age << ","
+            customerFile << newCustomer.accountNumber << "," << newCustomer.userName << "," << newCustomer.age << ","
                           << newCustomer.initialDeposit << endl;
             customerFile.close();
             cout << "\t\t\tBank account created successfully!\n";
