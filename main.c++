@@ -6,6 +6,7 @@
 #include <ctime>
 #include <fstream>
 #include <sstream>
+#include <algorithm>
 
 
 using namespace std;
@@ -57,24 +58,9 @@ struct Credentials {
     int age;
     int initialDeposit;
     int accountNumber;
+    string newPassWord;
 };
-
-/*
-Hi guys I've created this backbone based on what I remember we were supposed to implement, I might have excluded other features but will just add on this foundation
-Don't get scared of the code everything is just simple.
-WHAT I HAVE ADDED
-    -adminsCredentials.txt file - this will be storing admins passwords and username in this format "adminusername,adminpassword"
-    -customerCredentials.txt file- """"
-    -employeesCredentials.txr file - """"
-
-N/B:/-
-    the major throwback of this code now is that when a customer share common username and password as admins or employees it might give them previleges that they dont deserve
-    this can be adressed by storing the files in separate folders
-
-This code only serves as a foundation code and we should be building on top of it,
-We can start by working on the functions on the admin account side/ then add something that I(Nerd) might have forgoten to add on the menu (add function of admin to add other admins and employees,freeze accounts etc)
-We can also improve the user interface, I had limited time so I could not enhance it
-*/
+bool checkIfUserExists(const Credentials& creds);
 void signup() {
     Credentials newUser;
     system("cls");
@@ -90,6 +76,11 @@ void signup() {
     cin >> newUser.passWord;
     cout <<"|~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~|\n";
 
+    if (checkIfUserExists(newUser)) {
+        cout << "\t\tError: Username already exists!" << endl;
+        return;
+    }
+
     ofstream credentialsFile("customerCredentials.txt", ios::app);
     if (credentialsFile.is_open()) {
         credentialsFile << newUser.userName << "," << newUser.passWord << endl;
@@ -100,7 +91,30 @@ void signup() {
     }
 }
 
+bool checkIfUserExists(const Credentials& creds) {
+    ifstream inputFile("customerCredentials.txt");
+    if (!inputFile) {
+        cout << "Failed to open file 'customerCredentials.txt'" << endl;
+        return false;
+    }
 
+    string line;
+    while (getline(inputFile, line)) {
+        size_t pos = line.find(",");
+        if (pos == string::npos) continue;
+
+        string username = line.substr(0, pos);
+        string password = line.substr(pos + 1);
+
+        if (username == creds.userName && password == creds.passWord) {
+            inputFile.close();
+            return true;
+        }
+    }
+
+    inputFile.close();
+    return false;
+}
 
 
 class Account {
@@ -264,7 +278,6 @@ public:
         cout <<"|   6. Transfer money                                        |\n";
         cout <<"|   7. Change password                                       |\n";
         cout <<"|   8. Change currency                                       |\n";
-        //Sam
         cout <<"|   9. Log out                                               |\n";
         cout <<"|~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~|\n";
         cout <<"|   Please enter an option: ";
@@ -299,6 +312,10 @@ public:
             case 7:
             //Kelvin
                 changePassword();
+                break;
+            case 9:
+                logOut();
+                break;
             default:
                 cout << "\t\tInvalid option!\n";
                 break;
@@ -357,8 +374,60 @@ private:
     }
 
     void changePassword() {
-        // Implement logic for changing password
-        cout << "\t\tChanging password...\n";
+        Credentials loginUser;
+        bool validCredentials = false;
+
+        cout << "\nChanging password...\n";
+        cout << "Enter your username: ";
+        cin >> loginUser.userName;
+
+        // Prompt user to enter current password
+        cout << "Enter your current password: ";
+        cin >> loginUser.passWord;
+
+        ifstream credentialsFileIn("customerCredentials.txt");
+        if (credentialsFileIn.is_open()) {
+            ofstream tempFileOut("tempCredentials.txt");
+            if (tempFileOut.is_open()) {
+                string line;
+                while (getline(credentialsFileIn, line)) {
+                    size_t commaPos = line.find(',');
+                    string username = line.substr(0, commaPos);
+                    string password = line.substr(commaPos + 1);
+
+                    if (loginUser.userName == username && loginUser.passWord == password) {
+                        validCredentials = true;
+                        // Prompt user to enter new password
+                        string newPassword;
+                        cout << "Enter your new password: ";
+                        cin >> newPassword;
+                        tempFileOut << loginUser.userName << "," << newPassword << endl;
+                    } else {
+                        tempFileOut << line << endl;
+                    }
+                }
+                tempFileOut.close();
+                credentialsFileIn.close();
+
+                if (validCredentials) {
+                    remove("customerCredentials.txt");
+                    // Rename the temporary file to the original file
+                    if (rename("tempCredentials.txt", "customerCredentials.txt") == 0) {
+                        cout << "Password changed successfully!\n";
+                    } else {
+                        cout << "Error: Could not rename temporary file\n";
+                    }
+                } else {
+                    cout << "Incorrect username or password. Password change failed.\n";
+                    // Remove the temporary file if the password change failed
+                    remove("tempCredentials.txt");
+                }
+            } else {
+                cout << "Error: Could not open temporary file\n";
+            }
+        } else {
+            cout << "Error: Could not open credentials file\n";
+        }
     }
 
     void deleteCustomerBankAccount(){
