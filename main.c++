@@ -7,6 +7,7 @@
 #include <fstream>
 #include <sstream>
 #include <algorithm>
+#include <conio.h> // for _getch() function
 
 
 using namespace std;
@@ -57,8 +58,10 @@ struct Credentials {
     string passWord;
     int age;
     int initialDeposit;
-    int accountNumber;
+    int pin;
+    string accountNumber;
     string newPassWord;
+    string fulluserName;
 };
 bool checkIfUserExists(const Credentials& creds);
 void signup() {
@@ -116,6 +119,72 @@ bool checkIfUserExists(const Credentials& creds) {
     return false;
 }
 
+string generateAccountNumber() {
+    ifstream file("account_numbers.txt");
+
+    // Read the last account number from the file
+    string lastAccountNumber;
+    while (file >> lastAccountNumber) {
+        // continue reading until the last account number is obtained
+    }
+
+    // Increment the last account number by 1 to generate the new one
+    int newAccountNumber = atoi(lastAccountNumber.c_str()) + 1;
+
+    // Close the file
+    file.close();
+
+    // Append the new account number to the file
+    ofstream outFile("account_numbers.txt", ios::app);
+    outFile << newAccountNumber << endl;
+    outFile.close();
+
+    return "AC" + to_string(newAccountNumber);
+}
+
+int pinVerification() {
+    int pin1 = 0, pin2 = 0; // Initialize pin1 and pin2 to zero
+    char ch;
+    bool pinVerification = false;
+    do
+    {
+    cout << "\t\t\tEnter your PIN: ";
+    for (int i = 0; i < 4; i++) {
+        ch = _getch(); // reads a character from the keyboard without displaying it
+        if (ch >= '0' && ch <= '9') {
+            pin1 = (pin1 * 10) + (ch - '0'); // converts the character to an integer and stores it in pin1
+            cout << "*"; // displays an asterisk for privacy
+        }
+        else {
+            cout << "Invalid input. Please enter a 4-digit numeric PIN." << endl;
+            return 1; // exits the program if the input is invalid
+        }
+    }
+
+    cout << "\n\t\t\tConfirm your PIN: ";
+    for (int i = 0; i < 4; i++) {
+        ch = _getch(); // reads a character from the keyboard without displaying it
+        if (ch >= '0' && ch <= '9') {
+            pin2 = (pin2 * 10) + (ch - '0'); // converts the character to an integer and stores it in pin2
+            cout << "*"; // displays an asterisk for privacy
+        }
+        else {
+            cout << "Invalid input. Please enter a 4-digit numeric PIN." << endl;
+              return 1; // exits the program if the input is invalid
+        }
+    }
+
+    if (pin1 == pin2) {
+        cout << "\n\t\t\tPIN verified successfully!" << endl;
+        pinVerification = true;
+        return pin2;
+    }
+    else {
+        cout << "\n\t\t\tPINs do not match. Please try again." << endl;
+    }
+    } while (!pinVerification);
+    return 0, pin2;
+}
 
 class Account {
 public:
@@ -264,11 +333,15 @@ private:
 };
 
 class Customer : public Account {
+private:
+    string userName;
 public:
+    Customer(string userName) : userName(userName) {}
     void displayMenu() override {
         //Brad
         cout <<"|~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~|\n";
         cout <<"|                       CUSTOMER MENU                        |\n";
+        cout <<"|   Welcome, " << userName << "!                             |\n";
         cout <<"|~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~|\n";
         cout <<"|   1. Check balance                                         |\n";
         cout <<"|   2. Create a bank account                                 |\n";
@@ -291,7 +364,7 @@ public:
                 break;
             case 2:
             //Crissy
-                int createCustomerBankAccount();
+                createCustomerBankAccount();
                 break;
             case 3:
             //Crissy
@@ -329,30 +402,32 @@ private:
     }
     void createCustomerBankAccount(){
         Credentials newCustomer;
-      system("cls"); 
+        system("cls"); 
         cout <<"\t\t\t============ MTU SITA BANK SYSTEM ==============\n";
         cout <<"\t\t\t************************************************\n";
         cout <<"\t\t\t------------ CREATE BANK ACCOUNT --------------\n";
 
         cout << "\t\t\tEnter your full name: ";
-        getline(cin.ignore(), newCustomer.userName);
+        getline(cin.ignore(), newCustomer.fulluserName);
 
         cout << "\t\t\tEnter your age: ";
         cin >> newCustomer.age;
-
+        newCustomer.accountNumber = generateAccountNumber();
+        cout << "\t\t\tYour account number is: " << newCustomer.accountNumber << endl;  
+        int zero; // for the zero that was retuned in pin verification
+        zero,newCustomer.pin = pinVerification();
         cout << "\t\t\tEnter initial deposit amount: $";
         cin >> newCustomer.initialDeposit;
-        static int accountCounter = 1001;
-        newCustomer.accountNumber = accountCounter++;
 
         // Store the customer information in a file
         ofstream customerFile("customerAccounts.txt", ios::app);
         if (customerFile.is_open()) {
-            customerFile << newCustomer.accountNumber << "," << newCustomer.userName << "," << newCustomer.age << ","
-                          << newCustomer.initialDeposit << endl;
+            customerFile << newCustomer.accountNumber << "\t"<<newCustomer.pin <<"\t"<< newCustomer.fulluserName << "\t" << newCustomer.age << "\t"
+                          << newCustomer.initialDeposit <<"\tcreated by\t"<<newCustomer.userName<<endl;
             customerFile.close();
             cout << "\t\t\tBank account created successfully!\n";
             cout << "\t\t\tYour account number is: " << newCustomer.accountNumber << endl;
+            cout << "\t\t\tYour balance is: " << newCustomer.initialDeposit <<endl;
         } else {
             cout << "\t\t\tError: could not open customer accounts file\n";
         }
@@ -452,7 +527,7 @@ int main() {
     Account *currentAccount = nullptr; 
 
     do {
-        //system("cls");
+        system("cls");
         cout <<"~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n";
         cout <<"|                      MTU SITA BANK SYSTEM                  |\n";
         cout <<"|~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~|\n";
@@ -500,7 +575,7 @@ int main() {
 
                         if (inputCredentials.userName == username && inputCredentials.passWord == password) {
                             validCredentials = true;
-                            currentAccount = new Customer();
+                            currentAccount = new Customer(inputCredentials.userName);
                             break;
                         }
                     }
