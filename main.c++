@@ -63,7 +63,9 @@ struct Credentials {
     string newPassWord;
     string fulluserName;
 };
+
 bool checkIfUserExists(const Credentials& creds);
+
 void signup() {
     Credentials newUser;
     system("cls");
