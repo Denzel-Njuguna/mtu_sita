@@ -69,7 +69,9 @@ struct Credentials {
     string createdBy;
     string creatorName;
 };
+
 bool checkIfUserExists(const Credentials& creds);
+
 void signup() {
     Credentials newUser;
     system("cls");
@@ -439,7 +441,7 @@ private:
         cout << "\t\t\tYour account number is: " << newCustomer.accountNumber << endl;  
         int zero; // for the zero that was retuned in pin verification
         zero,newCustomer.pin = pinVerification();
-        cout << "\t\t\tEnter initial deposit amount: $";
+        cout << "\t\t\tEnter initial deposit amount: ksh";
         cin >> newCustomer.initialDeposit;
 
         // Store the customer information in a file
