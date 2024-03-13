@@ -7,16 +7,10 @@
 #include <fstream>
 #include <sstream>
 #include <algorithm>
-<<<<<<< HEAD
 #include <conio.h> // for _getch() function
-=======
 #include <vector>
 #include <conio.h>
->>>>>>> ca9f06abf92faaed38e710b43154ba1bfb64f7a3
-
-
 using namespace std;
-
 string adminUsername;
 string adminPassword;
 string employeeUsername;
@@ -67,20 +61,14 @@ struct Credentials {
     string accountNumber;
     string newPassWord;
     string fulluserName;
-<<<<<<< HEAD
 };
 bool checkIfUserExists(const Credentials& creds);
-=======
     string firstName;
     string secondName;
     int balance;
     string createdBy;
     string creatorName;
-};
-
 bool checkIfUserExists(const Credentials& creds);
-
->>>>>>> ca9f06abf92faaed38e710b43154ba1bfb64f7a3
 void signup() {
     Credentials newUser;
     system("cls");
@@ -382,11 +370,8 @@ public:
                 break;
             case 2:
             //Crissy
-<<<<<<< HEAD
                 createCustomerBankAccount();
-=======
                 createCustomerBankAccount(userName);
->>>>>>> ca9f06abf92faaed38e710b43154ba1bfb64f7a3
                 break;
             case 3:
             //Crissy
@@ -454,7 +439,6 @@ private:
         cout << "\t\t\tYour account number is: " << newCustomer.accountNumber << endl;  
         int zero; // for the zero that was retuned in pin verification
         zero,newCustomer.pin = pinVerification();
-<<<<<<< HEAD
         cout << "\t\t\tEnter initial deposit amount: $";
 =======
         cout << "\t\t\tEnter initial deposit amount: ksh";
@@ -465,11 +449,8 @@ private:
         ofstream customerFile("customerAccounts.txt", ios::app);
         if (customerFile.is_open()) {
             customerFile << newCustomer.accountNumber << "\t"<<newCustomer.pin <<"\t"<< newCustomer.fulluserName << "\t" << newCustomer.age << "\t"
-<<<<<<< HEAD
                           << newCustomer.initialDeposit <<"\tcreated by\t"<<newCustomer.userName<<endl;
-=======
                           << newCustomer.initialDeposit <<"\tcreatedBy\t"<<userName<<endl;
->>>>>>> ca9f06abf92faaed38e710b43154ba1bfb64f7a3
             customerFile.close();
             cout << "\t\t\tBank account created successfully!\n";
             cout << "\t\t\tYour account number is: " << newCustomer.accountNumber << endl;
