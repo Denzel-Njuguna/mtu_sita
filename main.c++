@@ -7,7 +7,12 @@
 #include <fstream>
 #include <sstream>
 #include <algorithm>
+<<<<<<< HEAD
 #include <conio.h> // for _getch() function
+=======
+#include <vector>
+#include <conio.h>
+>>>>>>> ca9f06abf92faaed38e710b43154ba1bfb64f7a3
 
 
 using namespace std;
@@ -62,8 +67,20 @@ struct Credentials {
     string accountNumber;
     string newPassWord;
     string fulluserName;
+<<<<<<< HEAD
 };
 bool checkIfUserExists(const Credentials& creds);
+=======
+    string firstName;
+    string secondName;
+    int balance;
+    string createdBy;
+    string creatorName;
+};
+
+bool checkIfUserExists(const Credentials& creds);
+
+>>>>>>> ca9f06abf92faaed38e710b43154ba1bfb64f7a3
 void signup() {
     Credentials newUser;
     system("cls");
@@ -360,11 +377,16 @@ public:
         switch (actionNumber) {
             case 1:
             //Brad
-                int checkBalance();
+                // int checkBalance();
+                checkBalance(userName);
                 break;
             case 2:
             //Crissy
+<<<<<<< HEAD
                 createCustomerBankAccount();
+=======
+                createCustomerBankAccount(userName);
+>>>>>>> ca9f06abf92faaed38e710b43154ba1bfb64f7a3
                 break;
             case 3:
             //Crissy
@@ -380,7 +402,7 @@ public:
                 break;
             case 6:
             //Samson
-                int transferMoney();
+                transferMoney(userName);
                 break;
             case 7:
             //Kelvin
@@ -396,11 +418,27 @@ public:
     }
 
 private:
-    void checkBalance() {
+    void checkBalance(string username) {
         // Display current balance
-        cout << "\t\tCurrent balance:\n";
+        // cout << "\t\tCurrent balance:\n";
+        ifstream file("customerAccounts.txt");
+        if (file.is_open()) {
+            string line;
+            while (getline(file, line)) {
+                istringstream iss(line);
+                string accountNumber, pin, firstName,secondName, age, balance, createdBy, creatorName;
+                iss >> accountNumber >> pin >> firstName >>secondName >> age >> balance >> createdBy >> creatorName;
+                if (creatorName == username) {
+                    cout << "Your account Number: " << accountNumber << endl;
+                    cout << "Your balance: " <<  balance << endl;
+                }
+            }
+            file.close();
+        } else {
+            cout << "Unable to open file";
+        }
     }
-    void createCustomerBankAccount(){
+    void createCustomerBankAccount(const string& username){
         Credentials newCustomer;
         system("cls"); 
         cout <<"\t\t\t============ MTU SITA BANK SYSTEM ==============\n";
@@ -416,14 +454,22 @@ private:
         cout << "\t\t\tYour account number is: " << newCustomer.accountNumber << endl;  
         int zero; // for the zero that was retuned in pin verification
         zero,newCustomer.pin = pinVerification();
+<<<<<<< HEAD
         cout << "\t\t\tEnter initial deposit amount: $";
+=======
+        cout << "\t\t\tEnter initial deposit amount: ksh";
+>>>>>>> ca9f06abf92faaed38e710b43154ba1bfb64f7a3
         cin >> newCustomer.initialDeposit;
 
         // Store the customer information in a file
         ofstream customerFile("customerAccounts.txt", ios::app);
         if (customerFile.is_open()) {
             customerFile << newCustomer.accountNumber << "\t"<<newCustomer.pin <<"\t"<< newCustomer.fulluserName << "\t" << newCustomer.age << "\t"
+<<<<<<< HEAD
                           << newCustomer.initialDeposit <<"\tcreated by\t"<<newCustomer.userName<<endl;
+=======
+                          << newCustomer.initialDeposit <<"\tcreatedBy\t"<<userName<<endl;
+>>>>>>> ca9f06abf92faaed38e710b43154ba1bfb64f7a3
             customerFile.close();
             cout << "\t\t\tBank account created successfully!\n";
             cout << "\t\t\tYour account number is: " << newCustomer.accountNumber << endl;
@@ -443,9 +489,59 @@ private:
         cout << "\t\tWithdrawing money...\n";
     }
 
-    void transferMoney() {
-        // Implement logic for transferring money between accounts
-        cout << "\t\tTransferring money...\n";
+    void transferMoney(string username) {   
+        string recipientAccount;
+        ifstream file("customerAccounts.txt");
+        ofstream tempFileOut("tempCredentials.txt");
+
+        if (file.is_open() && tempFileOut.is_open()) {
+            vector<Credentials> accounts;
+            string line;
+            while (getline(file, line)) {
+                istringstream iss(line);
+                Credentials account;
+                iss >> account.accountNumber >> account.pin >> account.firstName >> account.secondName >> account.age >> account.balance >> account.createdBy >> account.creatorName;
+                accounts.push_back(account);
+            }
+
+            for (size_t i = 0; i < accounts.size(); i++) {
+                if (accounts[i].creatorName == username) {
+                    cout << "Your account Number: " << accounts[i].accountNumber << endl;
+                    cout << "Your balance: " <<  accounts[i].balance << endl;
+                    cout << "Enter the recipient's account number: ";
+                    cin >> recipientAccount;
+
+                    for (size_t j = 0; j < accounts.size(); j++) {
+                        if (recipientAccount == accounts[j].accountNumber) {
+                            cout << "Enter the amount to transfer: ";
+                            int transferAmount;
+                            cin >> transferAmount;
+                            if (accounts[i].balance < transferAmount) {
+                                cout << "Insufficient funds.\n";
+                                return;
+                            }
+                            accounts[i].balance -= transferAmount;
+                            accounts[j].balance += transferAmount;
+                            cout << "Transfer successful.\n";
+                            break;
+                        }
+                    }
+                    break;
+                }
+            }
+
+            for (const auto& account : accounts) {
+                tempFileOut << account.accountNumber << "\t" << account.pin << "\t" << account.firstName << "\t" << account.secondName << "\t" << account.age << "\t" << account.balance << "\t" << account.createdBy << "\t" << account.creatorName << "\t" << endl;
+            }
+
+            file.close();
+            tempFileOut.close();
+
+            remove("customerAccounts.txt");
+            rename("tempCredentials.txt", "customerAccounts.txt");
+        } else {
+            cout << "Unable to open file";
+        }
     }
 
     void changePassword() {
