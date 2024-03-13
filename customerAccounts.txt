@@ -1,0 +1,4 @@
+
+AC2	1234	Samson Thomas	19	40000 
+AC3	4321	Reyham Buju	17	21000   
+AC5	987	Crissy Ian	20	34000		

@@ -6,6 +6,8 @@
 #include <ctime>
 #include <fstream>
 #include <sstream>
+#include <algorithm>
+#include <conio.h> // for _getch() function
 
 
 using namespace std;
@@ -56,25 +58,12 @@ struct Credentials {
     string passWord;
     int age;
     int initialDeposit;
-    int accountNumber;
+    int pin;
+    string accountNumber;
+    string newPassWord;
+    string fulluserName;
 };
-
-/*
-Hi guys I've created this backbone based on what I remember we were supposed to implement, I might have excluded other features but will just add on this foundation
-Don't get scared of the code everything is just simple.
-WHAT I HAVE ADDED
-    -adminsCredentials.txt file - this will be storing admins passwords and username in this format "adminusername,adminpassword"
-    -customerCredentials.txt file- """"
-    -employeesCredentials.txr file - """"
-
-N/B:/-
-    the major throwback of this code now is that when a customer share common username and password as admins or employees it might give them previleges that they dont deserve
-    this can be adressed by storing the files in separate folders
-
-This code only serves as a foundation code and we should be building on top of it,
-We can start by working on the functions on the admin account side/ then add something that I(Nerd) might have forgoten to add on the menu (add function of admin to add other admins and employees,freeze accounts etc)
-We can also improve the user interface, I had limited time so I could not enhance it
-*/
+bool checkIfUserExists(const Credentials& creds);
 void signup() {
     Credentials newUser;
     system("cls");
@@ -90,6 +79,11 @@ void signup() {
     cin >> newUser.passWord;
     cout <<"|~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~|\n";
 
+    if (checkIfUserExists(newUser)) {
+        cout << "\t\tError: Username already exists!" << endl;
+        return;
+    }
+
     ofstream credentialsFile("customerCredentials.txt", ios::app);
     if (credentialsFile.is_open()) {
         credentialsFile << newUser.userName << "," << newUser.passWord << endl;
@@ -100,8 +94,97 @@ void signup() {
     }
 }
 
+bool checkIfUserExists(const Credentials& creds) {
+    ifstream inputFile("customerCredentials.txt");
+    if (!inputFile) {
+        cout << "Failed to open file 'customerCredentials.txt'" << endl;
+        return false;
+    }
 
+    string line;
+    while (getline(inputFile, line)) {
+        size_t pos = line.find(",");
+        if (pos == string::npos) continue;
 
+        string username = line.substr(0, pos);
+        string password = line.substr(pos + 1);
+
+        if (username == creds.userName && password == creds.passWord) {
+            inputFile.close();
+            return true;
+        }
+    }
+
+    inputFile.close();
+    return false;
+}
+
+string generateAccountNumber() {
+    ifstream file("account_numbers.txt");
+
+    // Read the last account number from the file
+    string lastAccountNumber;
+    while (file >> lastAccountNumber) {
+        // continue reading until the last account number is obtained
+    }
+
+    // Increment the last account number by 1 to generate the new one
+    int newAccountNumber = atoi(lastAccountNumber.c_str()) + 1;
+
+    // Close the file
+    file.close();
+
+    // Append the new account number to the file
+    ofstream outFile("account_numbers.txt", ios::app);
+    outFile << newAccountNumber << endl;
+    outFile.close();
+
+    return "AC" + to_string(newAccountNumber);
+}
+
+int pinVerification() {
+    int pin1 = 0, pin2 = 0; // Initialize pin1 and pin2 to zero
+    char ch;
+    bool pinVerification = false;
+    do
+    {
+    cout << "\t\t\tEnter your PIN: ";
+    for (int i = 0; i < 4; i++) {
+        ch = _getch(); // reads a character from the keyboard without displaying it
+        if (ch >= '0' && ch <= '9') {
+            pin1 = (pin1 * 10) + (ch - '0'); // converts the character to an integer and stores it in pin1
+            cout << "*"; // displays an asterisk for privacy
+        }
+        else {
+            cout << "Invalid input. Please enter a 4-digit numeric PIN." << endl;
+            return 1; // exits the program if the input is invalid
+        }
+    }
+
+    cout << "\n\t\t\tConfirm your PIN: ";
+    for (int i = 0; i < 4; i++) {
+        ch = _getch(); // reads a character from the keyboard without displaying it
+        if (ch >= '0' && ch <= '9') {
+            pin2 = (pin2 * 10) + (ch - '0'); // converts the character to an integer and stores it in pin2
+            cout << "*"; // displays an asterisk for privacy
+        }
+        else {
+            cout << "Invalid input. Please enter a 4-digit numeric PIN." << endl;
+              return 1; // exits the program if the input is invalid
+        }
+    }
+
+    if (pin1 == pin2) {
+        cout << "\n\t\t\tPIN verified successfully!" << endl;
+        pinVerification = true;
+        return pin2;
+    }
+    else {
+        cout << "\n\t\t\tPINs do not match. Please try again." << endl;
+    }
+    } while (!pinVerification);
+    return 0, pin2;
+}
 
 class Account {
 public:
@@ -250,11 +333,15 @@ private:
 };
 
 class Customer : public Account {
+private:
+    string userName;
 public:
+    Customer(string userName) : userName(userName) {}
     void displayMenu() override {
         //Brad
         cout <<"|~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~|\n";
         cout <<"|                       CUSTOMER MENU                        |\n";
+        cout <<"|   Welcome, " << userName << "!                             |\n";
         cout <<"|~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~|\n";
         cout <<"|   1. Check balance                                         |\n";
         cout <<"|   2. Create a bank account                                 |\n";
@@ -264,7 +351,6 @@ public:
         cout <<"|   6. Transfer money                                        |\n";
         cout <<"|   7. Change password                                       |\n";
         cout <<"|   8. Change currency                                       |\n";
-        //Sam
         cout <<"|   9. Log out                                               |\n";
         cout <<"|~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~|\n";
         cout <<"|   Please enter an option: ";
@@ -278,7 +364,7 @@ public:
                 break;
             case 2:
             //Crissy
-                int createCustomerBankAccount();
+                createCustomerBankAccount();
                 break;
             case 3:
             //Crissy
@@ -299,6 +385,10 @@ public:
             case 7:
             //Kelvin
                 changePassword();
+                break;
+            case 9:
+                logOut();
+                break;
             default:
                 cout << "\t\tInvalid option!\n";
                 break;
@@ -312,30 +402,32 @@ private:
     }
     void createCustomerBankAccount(){
         Credentials newCustomer;
-      system("cls"); 
+        system("cls"); 
         cout <<"\t\t\t============ MTU SITA BANK SYSTEM ==============\n";
         cout <<"\t\t\t************************************************\n";
         cout <<"\t\t\t------------ CREATE BANK ACCOUNT --------------\n";
 
         cout << "\t\t\tEnter your full name: ";
-        getline(cin.ignore(), newCustomer.userName);
+        getline(cin.ignore(), newCustomer.fulluserName);
 
         cout << "\t\t\tEnter your age: ";
         cin >> newCustomer.age;
-
+        newCustomer.accountNumber = generateAccountNumber();
+        cout << "\t\t\tYour account number is: " << newCustomer.accountNumber << endl;  
+        int zero; // for the zero that was retuned in pin verification
+        zero,newCustomer.pin = pinVerification();
         cout << "\t\t\tEnter initial deposit amount: $";
         cin >> newCustomer.initialDeposit;
-        static int accountCounter = 1001;
-        newCustomer.accountNumber = accountCounter++;
 
         // Store the customer information in a file
         ofstream customerFile("customerAccounts.txt", ios::app);
         if (customerFile.is_open()) {
-            customerFile << newCustomer.accountNumber << "," << newCustomer.userName << "," << newCustomer.age << ","
-                          << newCustomer.initialDeposit << endl;
+            customerFile << newCustomer.accountNumber << "\t"<<newCustomer.pin <<"\t"<< newCustomer.fulluserName << "\t" << newCustomer.age << "\t"
+                          << newCustomer.initialDeposit <<"\tcreated by\t"<<newCustomer.userName<<endl;
             customerFile.close();
             cout << "\t\t\tBank account created successfully!\n";
             cout << "\t\t\tYour account number is: " << newCustomer.accountNumber << endl;
+            cout << "\t\t\tYour balance is: " << newCustomer.initialDeposit <<endl;
         } else {
             cout << "\t\t\tError: could not open customer accounts file\n";
         }
@@ -357,8 +449,60 @@ private:
     }
 
     void changePassword() {
-        // Implement logic for changing password
-        cout << "\t\tChanging password...\n";
+        Credentials loginUser;
+        bool validCredentials = false;
+
+        cout << "\nChanging password...\n";
+        cout << "Enter your username: ";
+        cin >> loginUser.userName;
+
+        // Prompt user to enter current password
+        cout << "Enter your current password: ";
+        cin >> loginUser.passWord;
+
+        ifstream credentialsFileIn("customerCredentials.txt");
+        if (credentialsFileIn.is_open()) {
+            ofstream tempFileOut("tempCredentials.txt");
+            if (tempFileOut.is_open()) {
+                string line;
+                while (getline(credentialsFileIn, line)) {
+                    size_t commaPos = line.find(',');
+                    string username = line.substr(0, commaPos);
+                    string password = line.substr(commaPos + 1);
+
+                    if (loginUser.userName == username && loginUser.passWord == password) {
+                        validCredentials = true;
+                        // Prompt user to enter new password
+                        string newPassword;
+                        cout << "Enter your new password: ";
+                        cin >> newPassword;
+                        tempFileOut << loginUser.userName << "," << newPassword << endl;
+                    } else {
+                        tempFileOut << line << endl;
+                    }
+                }
+                tempFileOut.close();
+                credentialsFileIn.close();
+
+                if (validCredentials) {
+                    remove("customerCredentials.txt");
+                    // Rename the temporary file to the original file
+                    if (rename("tempCredentials.txt", "customerCredentials.txt") == 0) {
+                        cout << "Password changed successfully!\n";
+                    } else {
+                        cout << "Error: Could not rename temporary file\n";
+                    }
+                } else {
+                    cout << "Incorrect username or password. Password change failed.\n";
+                    // Remove the temporary file if the password change failed
+                    remove("tempCredentials.txt");
+                }
+            } else {
+                cout << "Error: Could not open temporary file\n";
+            }
+        } else {
+            cout << "Error: Could not open credentials file\n";
+        }
     }
 
     void deleteCustomerBankAccount(){
@@ -383,7 +527,7 @@ int main() {
     Account *currentAccount = nullptr; 
 
     do {
-        //system("cls");
+        system("cls");
         cout <<"~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n";
         cout <<"|                      MTU SITA BANK SYSTEM                  |\n";
         cout <<"|~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~|\n";
@@ -431,7 +575,7 @@ int main() {
 
                         if (inputCredentials.userName == username && inputCredentials.passWord == password) {
                             validCredentials = true;
-                            currentAccount = new Customer();
+                            currentAccount = new Customer(inputCredentials.userName);
                             break;
                         }
                     }
